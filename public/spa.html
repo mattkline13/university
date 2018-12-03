@@ -1,7 +1,6 @@
 <html>
 <head>
-<title>A very simple SPA in Vue</title>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<title>University</title>
 <script
     src="https://code.jquery.com/jquery-3.3.1.js"
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -9,39 +8,76 @@
 </head>
 <body>
 
-<div id="Itemlist">
-    <button v-on:click="doajax('sections')">sections</button>
-    <button v-on:click="doajax('courses')">courses</button>
-    <button v-on:click="doajax('students')">students</button>
-    <ul>
-    <div v-for="item in items">
-        <li>{{item.name}}</li>
-    </div>
-    </ul>
-</div>
+<h1>University</h1>
+<button onclick="processStudent()">Students</button>
+<button onclick="processCourse()">Courses</button>
+<button onclick="processSection()">Sections</button>
 
-<script type="text/javascript">
-var ItemsVue = new Vue({
-    el: '#Itemlist',
-    data: { items: [] },
-    methods: {
-        // use jquery
-        doajax: function(which) {
-            $.ajax({
-                url: 'http://localhost:3000/' + which + '.json',
-                method: 'GET',
-                // use => so the this is not set
-                success: (d) => {
-                    this.items = d;
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
+<table id='table'></table>
+
+<script>
+var processStudent = function() {
+    $.get("http://localhost:3000/students.json", true)
+    .done(function(data) {
+        $('#table').empty();
+        $('#table').append($('<tr>'))
+        $('#table').append($('<th>')).append("Student").append($('</th>'))
+        $('#table').append($('<th>')).append("Student ID").append($('</th>'))
+        $('#table').append($('</tr>'))
+
+        for (item in data) {
+            $('#table').append($('<tr>'))
+            $('#table').append($('<td>')).append(data[item].name)
+            $('#table').append($('<td>')).append(data[item].number)
+            $('#table').append($('</tr>'))
         }
-    }
-});
-</script>
+    })
+    .fail(function(data){ console.log("Could not recall Students"); })
+};
 
+var processCourse = function() {
+    $.get("http://localhost:3000/courses.json", true)
+    .done(function(data) {
+        $('#table').empty();
+        $('#table').append($('<tr>'))
+        $('#table').append($('<th>')).append("Course Name")
+        $('#table').append($('<th>')).append("Department")
+        $('#table').append($('<th>')).append("Course Number")
+        $('#table').append($('<th>')).append("Credit Hours")
+        $('#table').append($('</tr>'))
+
+        for (item in data) {
+            $('#table').append($('<tr>'))
+            $('#table').append($('<td>')).append(data[item].name)
+            $('#table').append($('<td>')).append(data[item].department)
+            $('#table').append($('<td>')).append(data[item].number)
+            $('#table').append($('<td>')).append(data[item].creditHour)
+            $('#table').append($('</tr>'))
+        }
+    })
+    .fail(function(data){ console.log("Could not recall Courses"); })
+};
+
+var processSection = function() {
+    $.get("http://localhost:3000/sections.json", true)
+    .done(function(data) {
+        $('#table').empty();
+        $('#table').append($('<tr>'))
+        $('#table').append($('<th>')).append("Semester")
+        $('#table').append($('<th>')).append("Section Number")
+        $('#table').append($('<th>')).append("Room Number")
+        $('#table').append($('</tr>'))
+
+        for (item in data) {
+            $('#table').append($('<tr>'))
+            $('#table').append($('<td>')).append(data[item].semester)
+            $('#table').append($('<td>')).append(data[item].number)
+            $('#table').append($('<td>')).append(data[item].room)
+            $('#table').append($('</tr>'))
+        }
+    })
+    .fail(function(data){ console.log("Could not recall Sections"); })
+};
+</script>
 </body>
 </html>
